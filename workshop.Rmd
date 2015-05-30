@@ -1,8 +1,11 @@
 ---
-title: "Introduction R and Data Analysis"
+title: "solutions"
 author: "Dhairya Dalal"
-date: "May 30, 2015"
-output: html_document
+date: "May 29, 2015"
+output: 
+  ioslides_presentation:
+    widescreen: true
+    smaller: true
 ---
 
 ```{r, echo=FALSE, include=FALSE}
@@ -15,9 +18,8 @@ library(ggvis)
 library(statebins)
 
 ######## [Load Data] #########
-# Data provided by data.gov. http://catalog.data.gov/dataset/school-improvement-2010-grants
 # 1. Read school_data.csv using read.csv() and save results to data
-sdata 
+sdata = read.csv(file = "data/school_data.csv", stringsAsFactors = FALSE, na.strings = "")
 
 #2. Convert all column names to lower case
 
@@ -38,7 +40,7 @@ How many schools applied for a grant?
 # b. In order get the column with schools names try using the dollar 
 #    sign subselector (dataframe$column). For example the schools in 
 #    our dataset would be be sdata$schoo_name
-school_count 
+school_count = 
 ```
 Answer: `r school_count` schools applied for grants in 2010-2011. 
 
@@ -46,8 +48,8 @@ Answer: `r school_count` schools applied for grants in 2010-2011.
 How many unique schools applied for a grant? 
 ```{r}
 #a. To accomplish this we'll use the unique() function
-unique_schools 
-lous 
+unique_schools = 
+lous = 
 
 # You can can also express this in one line using a nested function call
 lous = length(unique(sdata$school_name))
@@ -58,12 +60,13 @@ Answer: `r lous` schools applied for grants in 2010-2011.
 What was the total amount of grant dollars disbursed? 
 ```{r}
 #a. To accomplish this we'll use sum function
-total 
+total = 
 
 #b. NA, that doesn't seem right. Let's ignore the 
 #  NA values in our total calculation using the 
 #  argument na.rm = TRUE
-total 
+total = 
+
 #c. Formatted total
 formatted_total = format(total, big.mark = ",", small.mark = ",")
 ```
@@ -74,7 +77,7 @@ What was average amount of grant dollars disbursed?
 ```{r}
 #a. To accomplish this we'll use the mean funtion. Don't
 #   forget to use na.rm=TRUE. 
-avg
+avg = 
 
 #b. Formatted avg
 formatted_avg = format(avg, big.mark = ",", small.mark = ",", nsmall = 2)
@@ -86,7 +89,7 @@ What was the median amount of grant dollars disbursed?
 ```{r}
 #a. To accomplish this we'll use the median funtion. Don't
 #   forget to use na.rm=TRUE. 
-med 
+med = 
 
 #b. Formatted avg
 formatted_med = format(med, big.mark = ",", small.mark = ",", nsmall = 2)
@@ -98,10 +101,10 @@ What was the smallest amount of grant dollars disbursed?
 ```{r}
 #a. To accomplish this we'll use the min() funtion. Don't
 #   forget to use na.rm=TRUE. 
-min_ 
+min_ = 
 
 #b. Formatted avg
-formatted_min 
+formatted_min = format(min_, big.mark = ",", small.mark = ",", nsmall = 2)
 ```
 Answer: The smallest amount granted was $`r formatted_min`. 
 
@@ -110,7 +113,8 @@ What was the median amount of grant dollars disbursed?
 ```{r}
 #a. To accomplish this we'll use the median funtion. Don't
 #   forget to use na.rm=TRUE. 
-max_ 
+max_ = 
+
 #b. Formatted avg
 formatted_max = format(max_, big.mark = ",", small.mark = ",", nsmall = 2)
 ```
@@ -120,7 +124,7 @@ Answer: The largest amount granted was $`r formatted_max`.
 Which schools recieved more than $900,000?
 ```{r}
 # We'll use the filter function in our dplyr chain
-nkschools 
+nkschools = 
 
 kable(nkschools)
 ```
@@ -130,10 +134,10 @@ What are the top 3 states which recieved the most funding overall?
 ```{r xtable, results="asis"}
 # Dplyr logic
 # group data by states > calculate total grant dollars per state 
-funding_state 
-
+funding_state = 
+  
 # Top 5 States in overall funding
-ordered_states 
+ordered_states = 
 ordered_states$total = format(ordered_states$total, big.mark = ",", small.mark = ",", nsmall = 2)
 top_3 = head(ordered_states, 3)
 kable(top_3)
@@ -143,7 +147,7 @@ kable(top_3)
 What are the bottom 5 states which recieved the least funding overall?
 ```{r}
 # Bottom 10 states in overall funding
-bottom_5 
+bottom_5 = tail(ordered_states, 5)
 kable(bottom_5)
 ```
 
@@ -162,7 +166,7 @@ geocodes = read.csv(file="data/geocodes.csv")
 head(geocodes,3) # Take quick peek at the new table
 
 #b. Next let's join sdata and geocodes by state and code
-joined 
+joined = left_join(sdata, geocodes, by = c("state" = "Code"))
 head(joined, 1)
 ```
 
@@ -171,7 +175,8 @@ head(joined, 1)
 # Let's try to replot our dataset using region instead
 library(ggthemes)
 options(scipen=999)
-qplot(state, award_amount_2010.2011, data = joined, color = Region) +
+ggplot(data = joined, aes( x= state, y = award_amount_2010.2011, colour = Region)) +
+     geom_point() + 
      theme(axis.text.x = element_text(angle = 70, hjust = 1, vjust = 1)) +
      ylab("Amount ($)") +
      ggtitle("Grants Awared by State") +
@@ -182,7 +187,8 @@ qplot(state, award_amount_2010.2011, data = joined, color = Region) +
 ## Data Visualization - Advanced Scatter Plots with Facets
 ```{r echo = FALSE, warning=FALSE, fig.width=10}
 # We can add the layer face_grid(~ model_selected) which will facet the chart by the tranformationl mode
-qplot(Region, award_amount_2010.2011, data = na.omit(joined), color = Region) +
+ggplot(data = na.omit(joined), aes(Region, award_amount_2010.2011, colour = Region)) +
+     geom_point() +
      theme(axis.text.x = element_text(angle = 70, hjust = 1, vjust = 1)) +
      ylab("Amount ($)") +
      ggtitle("Grants Awared by State") +
@@ -205,9 +211,15 @@ bar_data = head(ordered_states,15)
 
 ## Data Visualization - Histogram with Facet
 ```{r echo = FALSE, warning=FALSE, fig.width=10}
-ggplot(na.omit(joined), aes(x =award_amount_2010.2011)) +
+ggplot(data = na.omit(joined), aes(x =award_amount_2010.2011)) +
   geom_histogram() + 
   facet_grid( ~model_selected) +
   theme_hc()
+```
+
+
+## Data Visualization - State Bins
+```{r echo = FALSE, warning=FALSE, fig.width=10}
+statebins_continuous(joined, "state", "award_amount_2010.2011", plot_title = "Heatmap of Grants Awarded by State" )
 ```
 
