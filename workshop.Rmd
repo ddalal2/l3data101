@@ -194,6 +194,7 @@ qplot(Region, award_amount_2010.2011, data = na.omit(joined), color = Region) +
 ## Data Visualization - Bar plot
 ```{r echo = FALSE, warning=FALSE, fig.width=10}
 # Now let's make a bar plot of the top ten states with the most funding.
+bar_data = head(ordered_states,15)
 
 ```
 

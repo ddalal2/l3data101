@@ -160,7 +160,9 @@ kable(bottom_5)
 ## Data Visualization - Scatter plot
 ```{r}
 # Let's try to quickly plot our dataset using a scatter plot
-qplot(state, award_amount_2010.2011, data = sdata, color = state)
+ggplot(data = joined, aes( x= state, y = award_amount_2010.2011, colour = state)) +
+     geom_point()
+
 ```
 
 ## Interlude - Joins
@@ -181,7 +183,8 @@ head(joined, 1)
 # Let's try to replot our dataset using region instead
 library(ggthemes)
 options(scipen=999)
-qplot(state, award_amount_2010.2011, data = joined, color = Region) +
+ggplot(data = joined, aes( x= state, y = award_amount_2010.2011, colour = Region)) +
+     geom_point() + 
      theme(axis.text.x = element_text(angle = 70, hjust = 1, vjust = 1)) +
      ylab("Amount ($)") +
      ggtitle("Grants Awared by State") +
@@ -192,7 +195,8 @@ qplot(state, award_amount_2010.2011, data = joined, color = Region) +
 ## Data Visualization - Advanced Scatter Plots with Facets
 ```{r echo = FALSE, warning=FALSE, fig.width=10}
 # We can add the layer face_grid(~ model_selected) which will facet the chart by the tranformationl mode
-qplot(Region, award_amount_2010.2011, data = na.omit(joined), color = Region) +
+ggplot(data = na.omit(joined), aes(Region, award_amount_2010.2011, colour = Region)) +
+     geom_point() +
      theme(axis.text.x = element_text(angle = 70, hjust = 1, vjust = 1)) +
      ylab("Amount ($)") +
      ggtitle("Grants Awared by State") +
@@ -205,21 +209,22 @@ qplot(Region, award_amount_2010.2011, data = na.omit(joined), color = Region) +
 ```{r echo = FALSE, warning=FALSE, fig.width=10}
 # Now let's make a bar plot of the top ten states with the most funding.
 bar_data = head(ordered_states,15)
-ggplot(bar_data, aes(state, total, fill = state)) +
+ggplot(data = bar_data, aes( x = state, y = total, fill = state)) +
       geom_bar(stat = "identity") +
       theme_hc()
 ```
 
 ## Data Visualization - Histogram
 ```{r echo = FALSE, warning=FALSE, fig.width=10}
-qplot(joined$award_amount_2010.2011, geom="histogram") +
+ggplot(data = joined, aes(x=joined$award_amount_2010.2011)) +
+  geom_histogram() +
      xlab("Grant Amount ($)") +
      theme_hc()
 ```
 
 ## Data Visualization - Histogram with Facet
 ```{r echo = FALSE, warning=FALSE, fig.width=10}
-ggplot(na.omit(joined), aes(x =award_amount_2010.2011)) +
+ggplot(data = na.omit(joined), aes(x =award_amount_2010.2011)) +
   geom_histogram() + 
   facet_grid( ~model_selected) +
   theme_hc()
@@ -228,6 +233,6 @@ ggplot(na.omit(joined), aes(x =award_amount_2010.2011)) +
 
 ## Data Visualization - State Bins
 ```{r echo = FALSE, warning=FALSE, fig.width=10}
-statebins_continuous(joined, "state", "award_amount_2010.2011", plot_title = "Heatmap of Grants Awarded by State", )
+statebins_continuous(joined, "state", "award_amount_2010.2011", plot_title = "Heatmap of Grants Awarded by State" )
 ```
 
